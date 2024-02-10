@@ -25,26 +25,39 @@ import . "solutions/all/util"
  * }
  */
 func sortedListToBST(head *ListNode) *TreeNode {
-	vals := make([]int, 0)
+	if head == nil {
+		return nil
+	}
+	nodes := make([]*TreeNode, 0)
 	cur := head
 	for cur != nil {
-		vals = append(vals, cur.Val)
+		nodes = append(nodes, &TreeNode{Val: cur.Val})
 		cur = cur.Next
 	}
 
-	return sortedArrayToBST(vals)
+	mid := len(nodes) / 2
+	root := nodes[mid]
+	root.Left = nodesToBST(nodes[:mid])
+	root.Right = nodesToBST(nodes[mid+1:])
+
+	return root
 }
 
-func sortedArrayToBST(nums []int) *TreeNode {
-	if len(nums) == 0 {
+func nodesToBST(nodes []*TreeNode) *TreeNode {
+	switch size := len(nodes); size {
+	case 0:
 		return nil
+	case 1:
+		return nodes[0]
+	case 2:
+		nodes[1].Left = nodes[0]
+		return nodes[1]
 	}
 
-	mid := len(nums) / 2
-	root := &TreeNode{Val: nums[mid]}
-	root.Left = sortedArrayToBST(nums[:mid])
-	root.Right = sortedArrayToBST(nums[mid+1:])
-
+	mid := len(nodes) / 2
+	root := nodes[mid]
+	root.Left = nodesToBST(nodes[:mid])
+	root.Right = nodesToBST(nodes[mid+1:])
 	return root
 }
 
