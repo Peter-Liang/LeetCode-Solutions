@@ -14,6 +14,9 @@ type TreeNode struct {
 // }
 
 func ConvertTree(nodes []int) *TreeNode {
+	if len(nodes) == 0 {
+		return nil
+	}
 	result := make([]*TreeNode, 0)
 	for i, v := range nodes {
 		if v == -1 {

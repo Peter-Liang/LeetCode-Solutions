@@ -1,6 +1,8 @@
 package problem109
 
-import . "solutions/all/util"
+import (
+	. "solutions/all/util"
+)
 
 /*
  * @lc app=leetcode id=109 lang=golang
@@ -28,36 +30,46 @@ func sortedListToBST(head *ListNode) *TreeNode {
 	if head == nil {
 		return nil
 	}
-	nodes := make([]*TreeNode, 0)
-	cur := head
+	size := 1
+	nodes := &TreeNode{Val: head.Val}
+	next := nodes
+	cur := head.Next
 	for cur != nil {
-		nodes = append(nodes, &TreeNode{Val: cur.Val})
+		next.Right = &TreeNode{Val: cur.Val}
+		next = next.Right
 		cur = cur.Next
+		size++
 	}
 
-	mid := len(nodes) / 2
-	root := nodes[mid]
-	root.Left = nodesToBST(nodes[:mid])
-	root.Right = nodesToBST(nodes[mid+1:])
-
-	return root
+	return nodesToBST(nodes, size)
 }
 
-func nodesToBST(nodes []*TreeNode) *TreeNode {
-	switch size := len(nodes); size {
+func nodesToBST(node *TreeNode, size int) *TreeNode {
+	switch size {
 	case 0:
 		return nil
 	case 1:
-		return nodes[0]
+		node.Left = nil
+		node.Right = nil
+		return node
 	case 2:
-		nodes[1].Left = nodes[0]
-		return nodes[1]
+		root := node.Right
+		root.Left = node
+		root.Right = nil
+		node.Left = nil
+		node.Right = nil
+		return root
 	}
 
-	mid := len(nodes) / 2
-	root := nodes[mid]
-	root.Left = nodesToBST(nodes[:mid])
-	root.Right = nodesToBST(nodes[mid+1:])
+	mid := size / 2
+	var root *TreeNode
+	cur := node
+	for i := 0; i < mid; i++ {
+		cur = cur.Right
+	}
+	root = cur
+	root.Left = nodesToBST(node, mid)
+	root.Right = nodesToBST(cur.Right, size-mid-1)
 	return root
 }
 
