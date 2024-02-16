@@ -6,6 +6,13 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
+type Node struct {
+	Val   int
+	Left  *Node
+	Right *Node
+	Next  *Node
+}
+
 // func Test_convertTree(t *testing.T) {
 // 	nodes := []int{1, 3, -1, -1, 2}
 // 	root := convertTree(nodes)
